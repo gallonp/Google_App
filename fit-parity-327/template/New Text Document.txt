@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <style type="text/css">
+      .label {text-align: right}
+      .error {color: red}
+    </style>
+
+  <title>CS 253 Blog</title>
+</head>
+<h2>new Blog</h2>
+<body>
+	   <div>
+		<div>{{blog.title}}</div>
+		<pre>{{blog.content}}</pre>
+		<div>{{blog.created}}</div>
+	   </div>
+
+
+
+
+</body>
+</html>
