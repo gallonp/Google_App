@@ -34,21 +34,25 @@ class BaseHandler(webapp2.RequestHandler):
         self.response.out.write(render_str(template, **kw))
 
     def render_front(self, template,kw):
-        blogs=db.GqlQuery("SELECT * FROM blogPost ORDER BY created DESC LIMIT 10")
+        blogs=db.GqlQuery("SELECT * FROM blogPost ORDER BY created DESC")
         blogs=list(blogs)
         kw['blogs']=blogs
         picUrl=None
+##        self.response.out.write()
         points=filter(None,(b.coords for b in blogs))
         if points:
+            self.response.out.write(points)
             picUrl=gmaps_img(points)
-        kw['picUrl']=picUrl
-        self.render(template,**kw)
+            kw['picUrl']=picUrl
+            self.response.out.write(picUrl)
+##        self.render(template,**kw)
 
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
 
 IP_API_URL='http://api.hostip.info/?ip='
 def get_coords(ip):
+    ip='2.2.2.4'
     requestURL=IP_API_URL+str(ip)
     content=None
     try:
@@ -56,11 +60,14 @@ def get_coords(ip):
     except exceptions.Exception:
         return
     if content:
-        s=minidom.parseString(content)
+        s=parseString(content)
         g=s.getElementsByTagName('gml:coordinates')
+        
         if g and g[0].childNodes[0].nodeValue:
             lon,lat=g[0].childNodes[0].nodeValue.split(',')
-        return db.GeoPt(lat,lon)
+            lon=float(str(lon))
+            lat=float(str(lat))
+            return db.GeoPt(lat,lon)
 
 
 class blogPageHandler(BaseHandler):
